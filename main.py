@@ -43,7 +43,7 @@ def main():
             displayHands(playerHand, dealerHand, False)
             print()
 
-            #Про[верка на перебор у игрока
+            #Проверка на перебор у игрока
             if getHandValue(playerHand) > 21:
                 break
 

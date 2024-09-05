@@ -39,26 +39,22 @@ def main():
         playerHand = [deck.pop(), deck.pop()]
 
         print('Bet:', bet)
-        while True:  # Выполняем цикл до тех пор, пока игрок не скажет "хватит" или у него не будет перебор.
+        while True:
             displayHands(playerHand, dealerHand, False)
             print()
-
-            #Проверка на перебор у игрока
+            
             if getHandValue(playerHand) > 21:
                 break
 
-            #Получаем ход игрока
             move = getMove(playerHand, money - bet)
 
-            #Обработка действий игрока
             if move == 'D':
-                #Игрок удваивает, он может увеличить ставку:
                 additionalBet = getBet(min(bet, (money - bet)))
                 bet += additionalBet
                 print('Bet increased to {}.'.format(bet))
                 print('Bet: ', bet)
 
-            if move in ('H', 'D'):  # "Еще" или "удваиваю": игрок берет еще одну карту.
+            if move in ('H', 'D'):
                 newCard = deck.pop()
                 rank, suit = newCard
                 print('You drew a {} of {}.'.format(rank, suit))
@@ -67,22 +63,19 @@ def main():
                 if getHandValue(playerHand) > 21:
                     continue
 
-            if move in ('S', 'D'):  # "Хватит" или "удваиваю": переход хода к следующему игроку
+            if move in ('S', 'D'):
                 break
 
-            # Обработка действий дилера:
             if getHandValue(playerHand) <= 21:
                 while getHandValue(dealerHand) < 17:
-                    # Дилер берет еще карту:
                     print('Dealer hits...')
                     dealerHand.append(deck.pop())
                     displayHands(playerHand, dealerHand, False)
 
                     if getHandValue(dealerHand) > 21:
-                        break  # Перебор у дилера.
+                        break 
                     input('Press Enter to continue...')
                     print('\n\n')
-            # Отображает итоговые карты на руках:
             displayHands(playerHand, dealerHand, True)
 
             playerValue = getHandValue(playerHand)
@@ -142,10 +135,8 @@ def displayHands(playerHand, dealerHand, showDealerHand):
 
     else:
         print('DEALER: ???')
-        # Скрываем первую карту дилера:
         displayCards([BACKSIDE] + dealerHand[1:])
 
-    # Отображаем карты игрока:
     print('PLAYER:', getHandValue(playerHand))
     displayCards(playerHand)
 
@@ -156,19 +147,17 @@ def getHandValue(cards):
     value = 0
     numberOfAces = 0
 
-    # Добавляем стоимость карты — не туза:
     for card in cards:
-        rank = card[0]  # карта представляет собой кортеж (номинал, масть)
+        rank = card[0]
         if rank == 'A':
             numberOfAces += 1
-        elif rank in ('', '', ''):  # Фигурные карты стоят 10 очков.
+        elif rank in ('', '', ''):
             value += 10
         else:
-            value += int(rank)  # Стоимость числовых карт равна их номиналу.
+            value += int(rank)
 
-    value += numberOfAces  #
+    value += numberOfAces 
     for i in range(numberOfAces):
-        # Если можно добавить еще 10 с перебором, добавляем:
         if value + 10 <= 21:
             value += 10
     return value
@@ -187,8 +176,7 @@ def displayCards(cards):
             rows[3] += '|_##| '
 
         else:
-            # Выводим лицевую сторону карты:
-            rank, suit = card  # Карта — структура данных типа кортеж.
+            rank, suit = card
             rows[1] += '|{} | '.format(rank.ljust(2))
             rows[2] += '| {} | '.format(suit)
             rows[3] += '|_{}| '.format(rank.rjust(2, '_'))

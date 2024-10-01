@@ -24,6 +24,7 @@ def main():
     The dealer stops hitting at 17.''')
 
     money = 5000
+    
     while True:  #Цикл игры
         if money <= 0:
             print("You're broke!")
